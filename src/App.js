@@ -1,36 +1,55 @@
 import React, { Component } from "react";
+import Employees from "./components/Employees";
 import "./App.css";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      isLoading: true,
       employees: []
     };
   }
   componentDidMount() {
-    const url = `http://localhost:3001/employees`;
+    const url = `http://localhost:3001/`;
     fetch(url)
       .then(response => response.json())
       .then(json => {
         this.setState({
-          isLoading: false,
           employees: json
         });
       })
       .catch(function(error) {
-        this.setState({
-          isLoading: false
-        });
         console.log(error);
       });
   }
+
+  handleUpdate = () => {
+    const url = `http://localhost:3001/`;
+    fetch(url)
+      .then(response => response.json())
+      .then(json => {
+        this.setState({
+          employees: json
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
   render() {
+    let employees = this.state.employees.map((employee, index) => {
+      return (
+        <Employees
+          name={employee.name}
+          department={employee.department}
+          salary={employee.salary}
+        />
+      );
+    });
     return (
       <div className="App">
         <form
-          action="http://localhost:3000/employees"
+          action="http://localhost:3001/employees"
           method="post"
           name="myForm"
         >
@@ -40,7 +59,8 @@ class App extends Component {
           <input type="number" name="salary" id="salary" />
           <input type="submit" value="submit" />
         </form>
-        <button>Update</button>
+        <button onClick={this.handleUpdate}>Update</button>
+        {employees}
       </div>
     );
   }
